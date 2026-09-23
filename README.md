@@ -47,6 +47,25 @@ CRBVendas/
 
 Em produção, a connection string deve vir de variável de ambiente (`ConnectionStrings__DefaultConnection`) ou de um cofre de segredos — nunca de `appsettings.json`, que fica versionado com placeholder vazio.
 
+## Backup do banco de dados
+
+Use `scripts/backup-db.sh` para gerar um dump compactado (`.sql.gz`) do MySQL. Veja as instruções completas de configuração (arquivo de credenciais, agendamento via cron e cópia para um servidor remoto) nos comentários no topo do próprio script.
+
+Backup manual:
+
+```bash
+./scripts/backup-db.sh
+```
+
+Restaurar um backup:
+
+```bash
+gunzip -c ~/backups/crbvendas/crbvendas_AAAAMMDD_HHMMSS.sql.gz \
+  | mysql -u crbvendas -p crbvendas
+```
+
+Recomendado: agende o script no `cron` (diariamente) e configure `VPS_HOST` para que cada backup também seja copiado para fora desta máquina — um backup que só existe no mesmo disco do banco não protege contra falha de disco.
+
 ## Regras de negócio principais
 
 - Comissão calculada por faixa de desconto ofertado na venda (0/10% → 15%, 20% → 10%, 25% → 7%, 30% → 5%).

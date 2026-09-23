@@ -19,4 +19,14 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- appsettings.Development.json guarda credenciais locais reais (nunca versionado,
+         ver .gitignore). Ele deve continuar disponível para "dotnet run"/"dotnet build",
+         mas nunca deve ser copiado para uma pasta de publish (dotnet publish -c Release),
+         para não vazar a senha do banco local em um artefato de deploy. -->
+    <Content Update="appsettings.Development.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
