@@ -10,6 +10,8 @@ public class HomeIndexViewModel
     public decimal ComissaoFaturadaNoMes { get; set; }
     public decimal ComissaoPendenteNoMes { get; set; }
 
+    public decimal FaturamentoBrutoNoMes { get; set; }
+
     public int QuantidadeVendasFaturadasNoMes { get; set; }
     public int QuantidadeVendasPendentesNoMes { get; set; }
 

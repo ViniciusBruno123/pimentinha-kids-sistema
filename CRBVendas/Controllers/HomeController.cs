@@ -32,6 +32,9 @@ public class HomeController : Controller
         vm.QuantidadeVendasFaturadasNoMes = vm.VendasFaturadasNoMes.Count;
         vm.QuantidadeVendasPendentesNoMes = vm.VendasPendentesNoMes.Count;
 
+        vm.FaturamentoBrutoNoMes = vm.VendasFaturadasNoMes.Sum(v => v.Valor)
+            + vm.VendasPendentesNoMes.Sum(v => v.Valor);
+
         return View(vm);
     }
 }

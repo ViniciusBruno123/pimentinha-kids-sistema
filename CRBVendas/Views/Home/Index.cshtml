@@ -21,9 +21,18 @@
         </div>
     </form>
 
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card shadow-sm">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-5 g-3 mb-4">
+        <div class="col">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body">
+                    <h6 class="card-title">Faturamento bruto total</h6>
+                    <h4>@Model.FaturamentoBrutoNoMes.ToString("C")</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="card-title">Comissão faturada</h6>
                     <h4>@Model.ComissaoFaturadaNoMes.ToString("C")</h4>
@@ -31,8 +40,8 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
+        <div class="col">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="card-title">Comissão pendente</h6>
                     <h4>@Model.ComissaoPendenteNoMes.ToString("C")</h4>
@@ -40,8 +49,8 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
+        <div class="col">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="card-title">Qtd. faturadas</h6>
                     <h4>@Model.QuantidadeVendasFaturadasNoMes</h4>
@@ -49,8 +58,8 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm">
+        <div class="col">
+            <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h6 class="card-title">Qtd. pendentes</h6>
                     <h4>@Model.QuantidadeVendasPendentesNoMes</h4>
