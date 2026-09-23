@@ -1,0 +1,308 @@
+﻿@model CRBVendas.Models.Contato
+
+@{
+    ViewData["Title"] = "Novo Contato";
+}
+
+<h1 class="mb-4">Novo Contato</h1>
+
+<form asp-action="Create" method="post">
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <strong>Dados principais</strong>
+        </div>
+
+
+        <div class="card-body row g-3">
+
+
+            <div class="col-md-8">
+
+                <label asp-for="NomeFantasia" class="form-label"></label>
+
+                <input asp-for="NomeFantasia" class="form-control" />
+
+                <span asp-validation-for="NomeFantasia"
+                      class="text-danger"></span>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <label asp-for="NomeContato" class="form-label"></label>
+
+                <input asp-for="NomeContato" class="form-control" />
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label asp-for="AgendaAtual" class="form-label"></label>
+
+                <input asp-for="AgendaAtual"
+                       type="date"
+                       class="form-control" />
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <label asp-for="AgendaProxima" class="form-label"></label>
+
+                <input asp-for="AgendaProxima"
+                       type="date"
+                       class="form-control" />
+
+            </div>
+
+
+            <div class="col-md-12">
+
+                <label asp-for="Observacao" class="form-label"></label>
+
+                <textarea asp-for="Observacao"
+                          class="form-control"
+                          rows="3"></textarea>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="card shadow-sm mb-4">
+
+
+        <div class="card-header d-flex justify-content-between">
+
+            <strong>Telefones</strong>
+
+            <button type="button"
+                    class="btn btn-sm btn-outline-primary"
+                    onclick="adicionarTelefone()">
+
+                Adicionar telefone
+
+            </button>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <div id="telefones-container">
+
+
+            @for(int i = 0; i < Model.Telefones.Count; i++)
+            {
+
+                <div class="row g-2 mb-2 telefone-item">
+
+
+                    <div class="col-md-10">
+
+                        <input name="Telefones[@i].Telefone"
+                               value="@Model.Telefones[i].Telefone"
+                               class="form-control"
+                               placeholder="Telefone" />
+
+                    </div>
+
+
+                    <div class="col-md-2">
+
+                        <button type="button"
+                                class="btn btn-outline-danger w-100"
+                                onclick="removerItem(this)">
+                            Remover
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            }
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="card shadow-sm mb-4">
+
+
+        <div class="card-header">
+
+            <strong>Endereço</strong>
+
+        </div>
+
+
+        <div class="card-body row g-3">
+
+
+            <div class="col-md-6">
+
+                <input asp-for="Endereco.Logradouro"
+                       class="form-control"
+                       placeholder="Logradouro" />
+
+            </div>
+
+
+            <div class="col-md-2">
+
+                <input asp-for="Endereco.Numero"
+                       class="form-control"
+                       placeholder="Número" />
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <input asp-for="Endereco.Cidade"
+                       class="form-control"
+                       placeholder="Cidade" />
+
+            </div>
+
+
+            <div class="col-md-1">
+
+                <input asp-for="Endereco.CEP"
+                       class="form-control"
+                       placeholder="CEP" />
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <button class="btn btn-success">
+        Salvar
+    </button>
+
+
+    <a asp-action="Index"
+       class="btn btn-outline-secondary">
+        Cancelar
+    </a>
+
+
+</form>
+
+
+@section Scripts {
+
+<partial name="_ValidationScriptsPartial" />
+
+
+<script>
+
+
+function removerItem(botao)
+{
+    botao.closest(".telefone-item").remove();
+
+    reindexarTelefones();
+}
+
+
+
+function adicionarTelefone()
+{
+
+    let container =
+        document.getElementById("telefones-container");
+
+
+    let index =
+        container.querySelectorAll(".telefone-item").length;
+
+
+
+    let html = `
+
+    <div class="row g-2 mb-2 telefone-item">
+
+        <div class="col-md-10">
+
+            <input name="Telefones[${index}].Telefone"
+                   class="form-control"
+                   placeholder="Telefone"/>
+
+        </div>
+
+
+        <div class="col-md-2">
+
+            <button type="button"
+                    class="btn btn-outline-danger w-100"
+                    onclick="removerItem(this)">
+                Remover
+            </button>
+
+        </div>
+
+
+    </div>
+
+    `;
+
+
+    container.insertAdjacentHTML(
+        "beforeend",
+        html
+    );
+
+}
+
+
+
+function reindexarTelefones()
+{
+
+    let itens =
+    document.querySelectorAll(".telefone-item");
+
+
+    itens.forEach((item,index)=>{
+
+        item.querySelector("input")
+        .name =
+        `Telefones[${index}].Telefone`;
+
+    });
+
+}
+
+
+</script>
+
+}

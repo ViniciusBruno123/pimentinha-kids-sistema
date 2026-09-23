@@ -1,0 +1,163 @@
+﻿@model CRBVendas.Models.ViewModels.HomeIndexViewModel
+
+@{
+    ViewData["Title"] = "Início";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Painel inicial</h1>
+
+    <form method="get" asp-action="Index" class="row g-3 mb-4">
+        <div class="col-md-2">
+            <label class="form-label">Mês</label>
+            <input type="number" name="mes" class="form-control" min="1" max="12" value="@Model.MesReferencia" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Ano</label>
+            <input type="number" name="ano" class="form-control" min="2000" max="3000" value="@Model.AnoReferencia" />
+        </div>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary">Consultar</button>
+        </div>
+    </form>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Comissão faturada</h6>
+                    <h4>@Model.ComissaoFaturadaNoMes.ToString("C")</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Comissão pendente</h6>
+                    <h4>@Model.ComissaoPendenteNoMes.ToString("C")</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Qtd. faturadas</h6>
+                    <h4>@Model.QuantidadeVendasFaturadasNoMes</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h6 class="card-title">Qtd. pendentes</h6>
+                    <h4>@Model.QuantidadeVendasPendentesNoMes</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <strong>Vendas faturadas no mês</strong>
+                </div>
+                <div class="card-body">
+                    @if (Model.VendasFaturadasNoMes.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Fornecedor</th>
+                                    <th>Valor</th>
+                                    <th>Prev. faturamento</th>
+                                    <th>Comissão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venda in Model.VendasFaturadasNoMes)
+                                {
+                                    var comissao = venda.DescontoOfertado switch
+                                    {
+                                        0 => venda.Valor * 0.15m,
+                                        10 => venda.Valor * 0.15m,
+                                        20 => venda.Valor * 0.10m,
+                                        25 => venda.Valor * 0.07m,
+                                        30 => venda.Valor * 0.05m,
+                                        _ => 0m
+                                    };
+
+                                    <tr>
+                                        <td>@venda.Cliente?.Nome</td>
+                                        <td>@venda.Fornecedor?.Nome</td>
+                                        <td>@venda.Valor.ToString("C")</td>
+                                        <td>@venda.PrevisaoFaturamento.ToString("dd/MM/yyyy")</td>
+                                        <td>@comissao.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="mb-0">Nenhuma venda faturada neste mês.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <strong>Vendas pendentes no mês</strong>
+                </div>
+                <div class="card-body">
+                    @if (Model.VendasPendentesNoMes.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Fornecedor</th>
+                                    <th>Valor</th>
+                                    <th>Prev. faturamento</th>
+                                    <th>Comissão</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venda in Model.VendasPendentesNoMes)
+                                {
+                                    var comissao = venda.DescontoOfertado switch
+                                    {
+                                        0 => venda.Valor * 0.15m,
+                                        10 => venda.Valor * 0.15m,
+                                        20 => venda.Valor * 0.10m,
+                                        25 => venda.Valor * 0.07m,
+                                        30 => venda.Valor * 0.05m,
+                                        _ => 0m
+                                    };
+
+                                    <tr>
+                                        <td>@venda.Cliente?.Nome</td>
+                                        <td>@venda.Fornecedor?.Nome</td>
+                                        <td>@venda.Valor.ToString("C")</td>
+                                        <td>@venda.PrevisaoFaturamento.ToString("dd/MM/yyyy")</td>
+                                        <td>@comissao.ToString("C")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="mb-0">Nenhuma venda pendente neste mês.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

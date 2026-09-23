@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CRBVendas</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CRBVendas.styles.css" asp-append-version="true" />
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+    <style>
+        body {
+            background: #f4f6f9;
+            color: #212529;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, #1f2937, #111827);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-btn-group {
+            gap: 0.5rem;
+        }
+
+        .nav-action-btn {
+            border-radius: 10px;
+            padding: 0.45rem 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-action-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        main {
+            min-height: calc(100vh - 160px);
+        }
+
+        .content-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            padding: 1.5rem;
+        }
+
+        .footer-custom {
+            background: #fff;
+            border-top: 1px solid #dee2e6;
+            padding: 12px 0;
+            font-size: 0.95rem;
+        }
+
+        .footer-custom a {
+            text-decoration: none;
+        }
+
+        .footer-custom a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<script>
+    function somenteNumeros(valor) {
+        return valor.replace(/\D/g, '');
+    }
+
+    function formatarTelefone(input) {
+        let v = somenteNumeros(input.value);
+
+        if (v.length > 11) v = v.substring(0, 11);
+
+        if (v.length > 6)
+            input.value = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+        else if (v.length > 2)
+            input.value = `(${v.substring(0,2)}) ${v.substring(2)}`;
+        else
+            input.value = v;
+    }
+
+    function formatarCEP(input) {
+        let v = somenteNumeros(input.value);
+
+        if (v.length > 8) v = v.substring(0, 8);
+
+        if (v.length > 5)
+            input.value = `${v.substring(0,5)}-${v.substring(5)}`;
+        else
+            input.value = v;
+    }
+
+    function formatarCNPJ(input) {
+        let v = somenteNumeros(input.value);
+
+        if (v.length > 14) v = v.substring(0, 14);
+
+        if (v.length > 12)
+            input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5,8)}/${v.substring(8,12)}-${v.substring(12)}`;
+        else if (v.length > 8)
+            input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5,8)}/${v.substring(8)}`;
+        else if (v.length > 5)
+            input.value = `${v.substring(0,2)}.${v.substring(2,5)}.${v.substring(5)}`;
+        else if (v.length > 2)
+            input.value = `${v.substring(0,2)}.${v.substring(2)}`;
+        else
+            input.value = v;
+    }
+
+    function formatarIE(input) {
+        let v = somenteNumeros(input.value);
+
+        if (v.length > 12) v = v.substring(0, 12);
+
+        if (v.length > 9)
+            input.value = `${v.substring(0,3)}.${v.substring(3,6)}.${v.substring(6,9)}.${v.substring(9)}`;
+        else if (v.length > 6)
+            input.value = `${v.substring(0,3)}.${v.substring(3,6)}.${v.substring(6)}`;
+        else if (v.length > 3)
+            input.value = `${v.substring(0,3)}.${v.substring(3)}`;
+        else
+            input.value = v;
+    }
+</script>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm mb-4">
+            <div class="container-fluid px-3 px-md-4">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    CRBVendas
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegação">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" asp-controller="Clientes" asp-action="Index">Clientes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" asp-controller="Fornecedores" asp-action="Index">Fornecedores</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" asp-controller="Vendas" asp-action="Index">Vendas</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" asp-controller="Contatos" asp-action="Index">Agenda</a>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex flex-column flex-lg-row nav-btn-group">
+                        <a class="btn btn btn-warning nav-action-btn text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                           <i class="fa-solid fa-house"></i>
+                        </a>
+
+                        <button type="button" class="btn btn-warning nav-action-btn text-dark" onclick="history.back()">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-warning nav-action-btn text-dark" onclick="location.reload()">
+                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container pb-4">
+        <main role="main">
+            <div class="content-card">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <footer class="footer-custom text-muted">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div>
+                &copy; 2026 - <strong>CRBVendas</strong>
+            </div>
+            <div>
+                Sistema local de vendas
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

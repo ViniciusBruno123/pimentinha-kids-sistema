@@ -1,0 +1,38 @@
+﻿@model CRBVendas.Models.Cliente
+
+@{
+    ViewData["Title"] = "Excluir Cliente";
+}
+
+<h1 class="mb-4 text-danger">Excluir Cliente</h1>
+
+<div class="alert alert-warning">
+    Tem certeza de que deseja excluir este cliente?
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Id</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+
+            <dt class="col-sm-3">Nome</dt>
+            <dd class="col-sm-9">@Model.Nome</dd>
+
+            <dt class="col-sm-3">NomeFantasia</dt>
+            <dd class="col-sm-9">@Model.NomeFantasia</dd>
+
+            <dt class="col-sm-3">Representante</dt>
+            <dd class="col-sm-9">@Model.Representante</dd>
+        </dl>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input asp-for="Id" type="hidden" />
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>

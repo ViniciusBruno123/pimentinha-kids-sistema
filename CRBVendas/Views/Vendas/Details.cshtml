@@ -1,0 +1,102 @@
+﻿@model CRBVendas.Models.Venda
+
+@{
+    ViewData["Title"] = "Detalhes da Venda";
+}
+
+<h1 class="mb-4">Detalhes da Venda</h1>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <strong>Informações da venda</strong>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Id</dt>
+                    <dd class="col-sm-8">@Model.Id</dd>
+
+                    <dt class="col-sm-4">Cliente</dt>
+                    <dd class="col-sm-8">@Model.Cliente?.Nome</dd>
+
+                    <dt class="col-sm-4">Fornecedor</dt>
+                    <dd class="col-sm-8">@Model.Fornecedor?.Nome</dd>
+
+                    <dt class="col-sm-4">Valor</dt>
+                    <dd class="col-sm-8">@Model.Valor.ToString("C")</dd>
+
+                    <dt class="col-sm-4">Data da venda</dt>
+                    <dd class="col-sm-8">@Model.DataVenda.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Previsão de faturamento</dt>
+                    <dd class="col-sm-8">@Model.PrevisaoFaturamento.ToString("dd/MM/yyyy")</dd>
+
+                    <dt class="col-sm-4">Desconto ofertado</dt>
+                    <dd class="col-sm-8">@Model.DescontoOfertado%</dd>
+
+                    <dt class="col-sm-4">Percentual da comissão</dt>
+                    <dd class="col-sm-8">@ViewBag.PercentualComissao%</dd>
+
+                    <dt class="col-sm-4">Comissão</dt>
+                    <dd class="col-sm-8">@(((decimal)ViewBag.Comissao).ToString("C"))</dd>
+
+                    <dt class="col-sm-4">Faturado</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Faturado)
+                        {
+                            <span class="badge bg-success">Sim</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">Não</span>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4">Observação</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.Obs))
+                        {
+                            @Model.Obs
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <strong>Ações</strong>
+            </div>
+            <div class="card-body d-grid gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Excluir</a>
+
+                @if (Model.Faturado)
+                {
+                    <form asp-action="MarcarNaoFaturada" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-secondary w-100">Marcar como não faturada</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="MarcarFaturada" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-success w-100">Marcar como faturada</button>
+                    </form>
+                }
+
+                <a asp-action="Index" class="btn btn-outline-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>

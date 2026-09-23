@@ -1,0 +1,130 @@
+﻿@model CRBVendas.Models.ViewModels.VendaMesViewModel
+
+@{
+    ViewData["Title"] = "Consulta Mensal";
+}
+
+<h1 class="mb-4">Consulta Mensal</h1>
+
+<form method="get" asp-action="Mes" class="card shadow-sm mb-4">
+    <div class="card-header">
+        <strong>Selecionar mês</strong>
+    </div>
+    <div class="card-body row g-3">
+        <div class="col-md-2">
+            <label class="form-label">Mês</label>
+            <input type="number" name="mes" class="form-control" min="1" max="12" value="@Model.Mes" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Ano</label>
+            <input type="number" name="ano" class="form-control" min="2000" max="3000" value="@Model.Ano" />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Consultar</button>
+        </div>
+    </div>
+</form>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-success">
+            <div class="card-body">
+                <h6 class="text-muted">Comissão faturada no mês</h6>
+                <h2 class="text-success">@Model.ComissaoFaturada.ToString("C")</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm border-warning">
+            <div class="card-body">
+                <h6 class="text-muted">Comissão pendente no mês</h6>
+                <h2 class="text-warning">@Model.ComissaoPendente.ToString("C")</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <strong>Vendas faturadas</strong>
+            </div>
+            <div class="card-body">
+                @if (Model.VendasFaturadas.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Fornecedor</th>
+                                    <th>Valor</th>
+                                    <th>Prev.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venda in Model.VendasFaturadas)
+                                {
+                                    <tr>
+                                        <td>@venda.Cliente?.Nome</td>
+                                        <td>@venda.Fornecedor?.Nome</td>
+                                        <td>@venda.Valor.ToString("C")</td>
+                                        <td>@venda.PrevisaoFaturamento.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <span class="text-muted">Nenhuma venda faturada neste mês.</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <strong>Vendas pendentes</strong>
+            </div>
+            <div class="card-body">
+                @if (Model.VendasPendentes.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Fornecedor</th>
+                                    <th>Valor</th>
+                                    <th>Prev.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venda in Model.VendasPendentes)
+                                {
+                                    <tr>
+                                        <td>@venda.Cliente?.Nome</td>
+                                        <td>@venda.Fornecedor?.Nome</td>
+                                        <td>@venda.Valor.ToString("C")</td>
+                                        <td>@venda.PrevisaoFaturamento.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <span class="text-muted">Nenhuma venda pendente neste mês.</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>

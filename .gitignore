@@ -1,0 +1,25 @@
+# Build artifacts
+bin/
+obj/
+out/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Segredos locais (nunca commitar credenciais reais)
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+**/secrets.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

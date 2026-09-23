@@ -1,0 +1,192 @@
+﻿@model CRBVendas.Models.Fornecedor
+
+@{
+    ViewData["Title"] = "Editar Fornecedor";
+}
+
+<h1 class="mb-4">Editar Fornecedor</h1>
+
+<form asp-action="Edit" method="post">
+    <input asp-for="Id" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+            <strong>Dados principais</strong>
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-8">
+                <label asp-for="Nome" class="form-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Representante" class="form-label"></label>
+                <input asp-for="Representante" class="form-control" />
+                <span asp-validation-for="Representante" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Telefones</strong>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarTelefone()">Adicionar telefone</button>
+        </div>
+        <div class="card-body">
+            <div id="telefones-container">
+                @for (int i = 0; i < Model.Telefones.Count; i++)
+                {
+                    <div class="row g-2 mb-2 telefone-item">
+                        <div class="col-md-10">
+                            <input type="hidden" name="Telefones[@i].Id" value="@Model.Telefones[i].Id" />
+                            <input type="hidden" name="Telefones[@i].FornecedorId" value="@Model.Id" />
+                            <input name="Telefones[@i].Telefone" value="@Model.Telefones[i].Telefone" class="form-control" placeholder="Telefone" />
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-outline-danger w-100" onclick="removerItem(this)">Remover</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Endereços</strong>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="adicionarEndereco()">Adicionar endereço</button>
+        </div>
+        <div class="card-body">
+            <div id="enderecos-container">
+                @for (int i = 0; i < Model.Enderecos.Count; i++)
+                {
+                    <div class="border rounded p-3 mb-3 endereco-item">
+                        <div class="row g-3">
+                            <input type="hidden" name="Enderecos[@i].Id" value="@Model.Enderecos[i].Id" />
+                            <input type="hidden" name="Enderecos[@i].FornecedorId" value="@Model.Id" />
+
+                            <div class="col-md-5">
+                                <input name="Enderecos[@i].Logradouro" value="@Model.Enderecos[i].Logradouro" class="form-control" placeholder="Logradouro" />
+                            </div>
+                            <div class="col-md-2">
+                                <input name="Enderecos[@i].Numero" value="@Model.Enderecos[i].Numero" class="form-control" placeholder="Número" />
+                            </div>
+                            <div class="col-md-3">
+                                <input name="Enderecos[@i].Cidade" value="@Model.Enderecos[i].Cidade" class="form-control" placeholder="Cidade" />
+                            </div>
+                            <div class="col-md-2">
+                                <input name="Enderecos[@i].CEP" value="@Model.Enderecos[i].CEP" class="form-control" placeholder="CEP" />
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-outline-danger" onclick="removerItem(this)">Remover endereço</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Salvar alterações</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function removerItem(botao) {
+            botao.closest('.telefone-item, .endereco-item').remove();
+            reindexarTelefones();
+            reindexarEnderecos();
+        }
+
+        function adicionarTelefone() {
+            const container = document.getElementById('telefones-container');
+            const index = container.querySelectorAll('.telefone-item').length;
+            const fornecedorId = document.querySelector('input[name="Id"]').value;
+
+            const html = `
+                <div class="row g-2 mb-2 telefone-item">
+                    <div class="col-md-10">
+                        <input type="hidden" name="Telefones[${index}].Id" value="0" />
+                        <input type="hidden" name="Telefones[${index}].FornecedorId" value="${fornecedorId}" />
+                        <input name="Telefones[${index}].Telefone" class="form-control" placeholder="Telefone" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-danger w-100" onclick="removerItem(this)">Remover</button>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function adicionarEndereco() {
+            const container = document.getElementById('enderecos-container');
+            const index = container.querySelectorAll('.endereco-item').length;
+            const fornecedorId = document.querySelector('input[name="Id"]').value;
+
+            const html = `
+                <div class="border rounded p-3 mb-3 endereco-item">
+                    <div class="row g-3">
+                        <input type="hidden" name="Enderecos[${index}].Id" value="0" />
+                        <input type="hidden" name="Enderecos[${index}].FornecedorId" value="${fornecedorId}" />
+
+                        <div class="col-md-5">
+                            <input name="Enderecos[${index}].Logradouro" class="form-control" placeholder="Logradouro" />
+                        </div>
+                        <div class="col-md-2">
+                            <input name="Enderecos[${index}].Numero" class="form-control" placeholder="Número" />
+                        </div>
+                        <div class="col-md-3">
+                            <input name="Enderecos[${index}].Cidade" class="form-control" placeholder="Cidade" />
+                        </div>
+                        <div class="col-md-2">
+                            <input name="Enderecos[${index}].CEP" class="form-control" placeholder="CEP" />
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-outline-danger" onclick="removerItem(this)">Remover endereço</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', html);
+        }
+
+        function reindexarTelefones() {
+            const itens = document.querySelectorAll('#telefones-container .telefone-item');
+            const fornecedorId = document.querySelector('input[name="Id"]').value;
+
+            itens.forEach((item, index) => {
+                const inputs = item.querySelectorAll('input');
+                inputs[0].name = `Telefones[${index}].Id`;
+                inputs[1].name = `Telefones[${index}].FornecedorId`;
+                inputs[1].value = fornecedorId;
+                inputs[2].name = `Telefones[${index}].Telefone`;
+            });
+        }
+
+        function reindexarEnderecos() {
+            const itens = document.querySelectorAll('#enderecos-container .endereco-item');
+            const fornecedorId = document.querySelector('input[name="Id"]').value;
+
+            itens.forEach((item, index) => {
+                const inputs = item.querySelectorAll('input');
+                inputs[0].name = `Enderecos[${index}].Id`;
+                inputs[1].name = `Enderecos[${index}].FornecedorId`;
+                inputs[1].value = fornecedorId;
+                inputs[2].name = `Enderecos[${index}].Logradouro`;
+                inputs[3].name = `Enderecos[${index}].Numero`;
+                inputs[4].name = `Enderecos[${index}].Cidade`;
+                inputs[5].name = `Enderecos[${index}].CEP`;
+            });
+        }
+    </script>
+}

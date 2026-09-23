@@ -1,0 +1,240 @@
+﻿@model IEnumerable<CRBVendas.Models.Contato>
+
+@{
+    ViewData["Title"] = "Contatos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Agenda de Contatos</h1>
+
+    <a asp-action="Create" class="btn btn-primary">
+        Novo contato
+    </a>
+</div>
+
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Sucesso"]
+    </div>
+}
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Erro"]
+    </div>
+}
+
+<form method="get" asp-action="Index" class="row g-3 mb-4">
+
+    <div class="col-md-4">
+
+        <label class="form-label">
+            Cidade
+        </label>
+
+        <input name="cidade"
+               value="@ViewBag.Cidade"
+               class="form-control"
+               placeholder="Buscar cidade" />
+
+    </div>
+
+
+    <div class="col-md-3 d-flex align-items-end gap-2">
+
+        <button class="btn btn-primary">
+            Pesquisar
+        </button>
+
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            Limpar
+        </a>
+
+    </div>
+
+</form>
+
+<div class="table-responsive">
+
+<table class="table table-striped table-hover align-middle">
+
+<thead class="table-dark">
+<tr>
+    <th>Empresa</th>
+    <th>Contato</th>
+    <th>Telefone</th>
+    <th>Cidade</th>
+    <th>Próx Visita</th>
+    <th>Observação</th>
+    <th class="text-end">Ações</th>
+</tr>
+</thead>
+
+
+<tbody>
+
+@if(Model.Any())
+{
+    foreach(var contato in Model)
+    {
+        var atrasado = contato.AgendaProxima < DateTime.Today;
+
+        <tr class="@(atrasado ? "table-secondary" : "")">
+
+            <td>
+                @contato.NomeFantasia
+            </td>
+
+
+            <td>
+                @(contato.NomeContato ?? "-")
+            </td>
+
+
+            <td>
+                @if(contato.Telefones.Any())
+                {
+                    @string.Join(" / ",
+                    contato.Telefones.Select(t => t.Telefone))
+                }
+                else
+                {
+                    <span>-</span>
+                }
+            </td>
+
+            <td>
+                @if(contato.Endereco != null)
+                {
+                    @contato.Endereco.Cidade
+                }
+                else
+                {
+                    <span>-</span>
+                }
+            </td>
+
+
+            <td>
+
+                @if(contato.AgendaProxima.HasValue)
+                {
+                    if(atrasado)
+                    {
+                        <span class="text-danger">
+                            Atrasada:
+                            @contato.AgendaProxima.Value.ToString("dd/MM/yyyy")
+                        </span>
+                    }
+                    else
+                    {
+                        @contato.AgendaProxima.Value.ToString("dd/MM/yyyy")
+                    }
+                }
+                else
+                {
+                    <span>-</span>
+                }
+
+            </td>
+
+
+            <td>
+                @(contato.Observacao ?? "-")
+            </td>
+
+
+            <td class="text-end text-nowrap">
+
+                <a asp-action="Details"
+                   asp-route-id="@contato.Id"
+                   class="btn btn-sm btn-outline-info">
+                    Detalhes
+                </a>
+
+                <a asp-action="Edit"
+                   asp-route-id="@contato.Id"
+                   class="btn btn-sm btn-outline-warning">
+                    Editar
+                </a>
+
+                <a asp-action="Delete"
+                   asp-route-id="@contato.Id"
+                   class="btn btn-sm btn-outline-danger">
+                    Excluir
+                </a>
+
+            </td>
+
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="6" class="text-center text-muted">
+            Nenhum contato cadastrado.
+        </td>
+    </tr>
+}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<nav>
+
+<ul class="pagination justify-content-center">
+
+
+@if(ViewBag.PaginaAtual > 1)
+{
+    <li class="page-item">
+
+        <a class="page-link"
+           asp-route-pagina="@(ViewBag.PaginaAtual - 1)"
+           asp-route-cidade="@ViewBag.Cidade">
+            Anterior
+        </a>
+
+    </li>
+}
+
+
+<li class="page-item active">
+
+<span class="page-link">
+
+@ViewBag.PaginaAtual
+/
+@ViewBag.TotalPaginas
+
+</span>
+
+</li>
+
+
+@if(ViewBag.PaginaAtual < ViewBag.TotalPaginas)
+{
+    <li class="page-item">
+
+        <a class="page-link"
+           asp-route-pagina="@(ViewBag.PaginaAtual + 1)"
+           asp-route-cidade="@ViewBag.Cidade">
+            Próxima
+        </a>
+
+    </li>
+}
+
+</ul>
+
+</nav>

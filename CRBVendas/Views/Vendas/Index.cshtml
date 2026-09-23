@@ -1,0 +1,148 @@
+﻿@model CRBVendas.Models.ViewModels.VendaIndexViewModel
+
+@{
+    ViewData["Title"] = "Vendas";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Vendas</h1>
+    <div class="d-flex gap-2">
+        <a asp-action="Mes" class="btn btn-outline-primary">Consulta mensal</a>
+        <a asp-action="Create" class="btn btn-primary">Nova venda</a>
+    </div>
+</div>
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success">@TempData["Sucesso"]</div>
+}
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erro"]</div>
+}
+
+<form method="get" asp-action="Index" class="card shadow-sm mb-4">
+    <div class="card-header">
+        <strong>Filtros</strong>
+    </div>
+    <div class="card-body row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Cliente</label>
+            <select name="clienteId" class="form-select" asp-items="Model.Clientes">
+                <option value="">Todos</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Fornecedor</label>
+            <select name="fornecedorId" class="form-select" asp-items="Model.Fornecedores">
+                <option value="">Todos</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Data inicial</label>
+            <input type="date" name="dataInicial" class="form-control"
+                   value="@(Model.DataInicial?.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Data final</label>
+            <input type="date" name="dataFinal" class="form-control"
+                   value="@(Model.DataFinal?.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+
+        <div class="col-md-12">
+            <a asp-action="Index" class="btn btn-outline-secondary">Limpar filtros</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Cliente</th>
+                <th>Fornecedor</th>
+                <th>Valor</th>
+                <th>Data venda</th>
+                <th>Prev. faturamento</th>
+                <th>Desc. (%)</th>
+                <th>Faturado</th>
+                <th>Obs</th>
+                <th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Vendas.Any())
+            {
+                @foreach (var venda in Model.Vendas)
+                {
+                    <tr>
+                        <td>@venda.Cliente?.Nome</td>
+                        <td>@venda.Fornecedor?.Nome</td>
+                        <td>@venda.Valor.ToString("C")</td>
+                        <td>@venda.DataVenda.ToString("dd/MM/yyyy")</td>
+                        <td>@venda.PrevisaoFaturamento.ToString("dd/MM/yyyy")</td>
+                        <td>@venda.DescontoOfertado%</td>
+                        <td>
+                            @if (venda.Faturado)
+                            {
+                                <span class="badge bg-success">Sim</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Não</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(venda.Obs))
+                            {
+                                @venda.Obs
+                            }
+                            else
+                            {
+                                <span class="text-muted">-</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex flex-wrap justify-content-end gap-1">
+                                <a asp-action="Details" asp-route-id="@venda.Id" class="btn btn-sm btn-outline-info">Detalhes</a>
+                                <a asp-action="Edit" asp-route-id="@venda.Id" class="btn btn-sm btn-outline-warning">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@venda.Id" class="btn btn-sm btn-outline-danger">Excluir</a>
+
+                                @if (venda.Faturado)
+                                {
+                                    <form asp-action="MarcarNaoFaturada" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@venda.Id" />
+                                        <button type="submit" class="btn btn-sm btn-secondary">Desfaturar</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <form asp-action="MarcarFaturada" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@venda.Id" />
+                                        <button type="submit" class="btn btn-sm btn-success">Faturar</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="9" class="text-center text-muted">Nenhuma venda encontrada.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
