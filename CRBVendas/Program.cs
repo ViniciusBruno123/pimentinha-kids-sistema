@@ -5,7 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using CRBVendas.Services;
 using CRBVendas.Services.Interfaces;
 
-var builder = WebApplication.CreateBuilder(args);
+// Sistema de uso local: o executável (inclusive o publicado) roda sempre como Development,
+// lendo appsettings.Development.json da própria pasta, de onde quer que seja iniciado.
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    EnvironmentName = Environments.Development,
+    ContentRootPath = AppContext.BaseDirectory
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
